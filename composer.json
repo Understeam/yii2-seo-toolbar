@@ -1,0 +1,25 @@
+{
+  "name": "understeam/yii2-seo-toolbar",
+  "type": "package",
+  "minimum-stability": "dev",
+  "license": "GPLv3",
+  "authors": [
+    {
+      "name": "Anatoly Rugalev",
+      "email": "anatoly.rugalev@gmail.com"
+    },
+    {
+      "name": "Alexey Deryushev",
+      "email": "derushev.alexey@gmail.com"
+    }
+  ],
+  "require": {
+    "yiisoft/yii2": ">=2.0.6",
+    "yiisoft/yii2-redis": ">=2.0.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "understeam\\seotoolbar\\": "src"
+    }
+  }
+}
