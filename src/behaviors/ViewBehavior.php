@@ -37,16 +37,26 @@ class ViewBehavior extends Behavior
 
     public function beforeRender(ViewEvent $event)
     {
+        if (Yii::$app->request->isAjax && !Yii::$app->request->isPjax) {
+            return;
+        }
+        if (Yii::$app->controller->module->id == 'seoToolbar') {
+            return;
+        }
+        $url = Yii::$app->request->url;
         if (!isset(self::$_seoPage)) {
-            self::$_seoPage = Page::findByUrl(Yii::$app->request->url);
+            self::$_seoPage = Page::findByUrl($url);
         }
         if (self::$_seoPage) {
             $params = $event->params;
             foreach ($params as $key => $param) {
-                if ($param instanceof Model && $param->hasMethod('getSeo')) {
+                if ($param instanceof Model && $param->hasMethod('getSeoPrefix')) {
                     self::$_seoPage->addModel($param, $key);
                 }
             }
+        }
+        if (Yii::$app->getModule('seoToolbar')->checkAccess(Yii::$app)) {
+            Yii::$app->session->set('seoAttributes:' . $url, self::$_seoPage->getReplaceData());
         }
     }
 

@@ -17,20 +17,24 @@ class SeoEntity extends Behavior
     public $owner;
 
     public $prefix = null;
-    public $attributes = [];
+    public $attributes;
 
     public function getSeoPrefix()
     {
         if ($this->prefix === null) {
             $reflection = new \ReflectionClass($this->owner);
-            $this->prefix = $reflection->getShortName();
+            $this->prefix = lcfirst($reflection->getShortName());
         }
         return $this->prefix;
     }
 
     public function getSeoAttributes()
     {
-        return $this->owner->attributes();
+        if (is_array($this->attributes)) {
+            return $this->attributes;
+        } else {
+            return $this->owner->attributes;
+        }
     }
 
 }

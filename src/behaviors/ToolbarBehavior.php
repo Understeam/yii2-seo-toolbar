@@ -28,7 +28,7 @@ class ToolbarBehavior extends Behavior
         $url = Url::to(['/seoToolbar/toolbar/index']);
         $this->owner->registerJs(<<<JAVASCRIPT
 $.get("{$url}", function(data) {
-    $('body').append(data);
+    $('body').prepend(data);
 });
 JAVASCRIPT
         , View::POS_READY);

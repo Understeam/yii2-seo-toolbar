@@ -3,7 +3,9 @@
 namespace understeam\seotoolbar\models;
 
 use understeam\seotoolbar\behaviors\SeoEntity;
+use Yii;
 use yii\base\Model;
+use yii\helpers\Json;
 use yii\redis\ActiveRecord;
 use yii\web\View;
 
@@ -14,7 +16,7 @@ use yii\web\View;
  * @property string $title
  * @property string $description
  * @property string $keywords
- * @property string $meta
+ * @property string $ogTags
  * @property int $created
  *
  * @author Anatoly Rugalev <rugalev@enaza.ru>
@@ -22,6 +24,7 @@ use yii\web\View;
 class Page extends ActiveRecord
 {
 
+    private static $_patterns;
     private $_models = [];
 
     private $_replaceData;
@@ -36,15 +39,6 @@ class Page extends ActiveRecord
         return ['pattern'];
     }
 
-    /**
-     * @param string $url
-     * @return Page|null
-     */
-    public static function findByUrl($url)
-    {
-        return self::findOne($url);
-    }
-
     public function attributes()
     {
         return [
@@ -52,9 +46,55 @@ class Page extends ActiveRecord
             'title',
             'description',
             'keywords',
-            'meta',
+            'ogTags',
             'created',
         ];
+    }
+
+    /**
+     * @param string $url
+     * @return Page|null
+     */
+    public static function findByUrl($url)
+    {
+        $page = self::findOne($url);
+        if (!$page) {
+            $page = self::findByPattern($url);
+        }
+        return $page;
+    }
+
+    public static function findByPattern($url)
+    {
+        $patterns = self::getPatterns();
+        foreach ($patterns as $pattern => $regexp) {
+            if (preg_match($regexp, $url)) {
+                return self::findOne($pattern);
+            }
+        }
+        return null;
+    }
+
+    public static function getPatterns($refresh = false)
+    {
+        if (!isset(self::$_patterns) || $refresh) {
+            if (!$refresh) {
+                self::$_patterns = Yii::$app->cache->get('seoPatterns');
+            }
+            if (!self::$_patterns) {
+                self::$_patterns = [];
+                // TODO: Optimization
+                /** @var Page[] $pages */
+                $patterns = Page::find()->column('pattern');
+                foreach ($patterns as $pattern) {
+                    if (strpos($pattern, '*') !== false) {
+                        self::$_patterns[$pattern] = '#^' . strtr($pattern, ['*' => '(.*)']) . '$#';
+                    }
+                }
+                Yii::$app->cache->set('seoPatterns', self::$_patterns);
+            }
+        }
+        return self::$_patterns;
     }
 
     public function addModel(Model $model, $key = null)
@@ -77,9 +117,9 @@ class Page extends ActiveRecord
             'name' => 'keywords',
             'content' => $this->renderAttribute($this->keywords),
         ]);
-        foreach ($this->getExtraMetaTags() as $name => $template) {
+        foreach ($this->getOgTags() as $property => $template) {
             $view->registerMetaTag([
-                'name' => $name,
+                'property' => $property,
                 'value' => $this->renderAttribute($template),
             ]);
         }
@@ -90,9 +130,13 @@ class Page extends ActiveRecord
         return strtr($template, $this->getReplaceData());
     }
 
-    public function getExtraMetaTags()
+    public function getOgTags()
     {
-        return [];
+        $result = Json::decode($this->ogTags);
+        if (!is_array($result)) {
+            $result = [];
+        }
+        return $result;
     }
 
     public function getReplaceData()

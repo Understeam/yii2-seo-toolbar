@@ -36,8 +36,14 @@ ToolbarAssets::register($this);
     <?= $form->field($model, 'description')->textInput(); ?>
 
     <div class="seo-status">
-        <?=$model->isNewRecord ? 'Имеется запись' : 'Запись ещё не создана' ?>
+        <?=$model->isNewRecord ? 'Запись ещё не создана' : 'Имеется запись' ?>
     </div>
+    <dl class="seo-attributes">
+        <?php foreach($seoAttributes as $key => $value):  ?>
+            <dt><?=$key?></dt>
+            <dd><?=$value?></dd>
+        <?php endforeach; ?>
+    </dl>
     <?= \yii\helpers\Html::submitButton('Сохранить'); ?>
     <?php $form->end(); ?>
     <?php $pjax->end(); ?>

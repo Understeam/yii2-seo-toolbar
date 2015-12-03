@@ -2,7 +2,6 @@
 
 namespace understeam\seotoolbar\controllers;
 
-use understeam\seotoolbar\models\Page;
 use understeam\seotoolbar\models\PageForm;
 use Yii;
 use yii\web\Controller;
@@ -32,7 +31,8 @@ class ToolbarController extends Controller
 
     public function actionIndex()
     {
-        $model = PageForm::createByUrl(Yii::$app->request->referrer);
+        $url = preg_replace('#^' . Yii::$app->request->hostInfo . '#', '', Yii::$app->request->referrer);
+        $model = PageForm::createByUrl($url);
         if ($model->load(Yii::$app->request->post())) {
             if (Yii::$app->request->post('ajax') == 'seo-entity-form') {
                 Yii::$app->response->format = Response::FORMAT_JSON;
@@ -42,7 +42,8 @@ class ToolbarController extends Controller
                 Yii::$app->session->addFlash('seo-success', 'Seo entity successfully saved!');
             }
         }
-        return $this->renderAjax($this->action->id, compact('model'));
+        $seoAttributes = Yii::$app->session->get('seoAttributes:' . $url, []);
+        return $this->renderAjax($this->action->id, compact('model', 'seoAttributes'));
     }
 
 }

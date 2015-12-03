@@ -36,13 +36,12 @@ class PageForm extends Model
     public static function createByUrl($url)
     {
         $model = new self;
-        $url = preg_replace('#^' . Yii::$app->request->hostInfo . '#', '', $url);
         $model->_page = Page::findByUrl($url);
         if (!$model->_page) {
             $model->_page = new Page([
                 'pattern' => $url,
-                'isNewRecord' => true,
             ]);
+            $model->isNewRecord = true;
         }
         $model->pattern = $model->_page->pattern;
         $model->title = $model->_page->title;
@@ -59,7 +58,9 @@ class PageForm extends Model
             'keywords',
             'description',
         ]), false);
-        return $this->_page->save(false);
+        $result = $this->_page->save(false);
+        Page::getPatterns(true);
+        return $result;
     }
 
 }
