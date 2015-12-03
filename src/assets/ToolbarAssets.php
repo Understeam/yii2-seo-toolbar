@@ -15,6 +15,10 @@ class ToolbarAssets extends AssetBundle
         'toolbar.css'
     ];
 
+    public $js = [
+        'toolbar.js',
+    ];
+
     public function init()
     {
         $this->sourcePath = __DIR__ . '/files';
