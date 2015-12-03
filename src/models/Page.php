@@ -117,10 +117,10 @@ class Page extends ActiveRecord
             'name' => 'keywords',
             'content' => $this->renderAttribute($this->keywords),
         ]);
-        foreach ($this->getOgTags() as $property => $template) {
+        foreach ($this->getOgTags() as $tag) {
             $view->registerMetaTag([
-                'property' => $property,
-                'value' => $this->renderAttribute($template),
+                'property' => $tag['property'],
+                'content' => $this->renderAttribute($tag['content']),
             ]);
         }
     }

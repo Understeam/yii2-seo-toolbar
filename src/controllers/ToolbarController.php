@@ -38,8 +38,10 @@ class ToolbarController extends Controller
                 Yii::$app->response->format = Response::FORMAT_JSON;
                 return ActiveForm::validate($model);
             }
-            if ($model->apply()) {
-                Yii::$app->session->addFlash('seo-success', 'Seo entity successfully saved!');
+            if ($model->validate()) {
+                if ($model->apply()) {
+                    Yii::$app->session->addFlash('seo-success', 'Seo entity successfully saved!');
+                }
             }
         }
         $seoAttributes = Yii::$app->session->get('seoAttributes:' . $url, []);

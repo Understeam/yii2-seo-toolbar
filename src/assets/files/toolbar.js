@@ -1,8 +1,12 @@
 $(function() {
+
+	var ogTemplate;
+
 	var yiiSeoTool = {
 		container: '.toolbar-inner',
 		toggler: '.yii-seo-toolbar-logo',
 		ogList: '.yii-seo-og-list',
+		ogGroup: 'div.form-group',
 		setVisible: function() {
 			var visible = localStorage.getItem('yiiSeoTool');
 
@@ -13,10 +17,15 @@ $(function() {
 			}
 		},
 		addOgTag: function () {
-			var ogTemplate = $(yiiSeoTool.ogList).first().html();
-			$(yiiSeoTool.ogList).append(ogTemplate);
+			var item = $('<div class="form-group" />').append(ogTemplate.html().replace(/\[ogTags\]\[[0-9]+\]/g, function() {
+				return "[ogTags][" + $(yiiSeoTool.ogList + ' ' + yiiSeoTool.ogGroup).length + "]";
+			}));
+			$(yiiSeoTool.ogList).append(item);
+			item.find('input').val('');
 		}
 	};
+
+	ogTemplate = $(yiiSeoTool.ogList + ' ' + yiiSeoTool.ogGroup).first().clone();
 
 	localStorage.getItem('yiiSeoTool') ? yiiSeoTool.setVisible() : localStorage.setItem('yiiSeoTool', 0);
 

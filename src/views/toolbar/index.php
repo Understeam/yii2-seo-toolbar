@@ -1,6 +1,7 @@
 <?php
 /**
  * @var PageForm $model
+ * @var array $seoAttributes
  */
 use understeam\seotoolbar\assets\ToolbarAssets;
 use understeam\seotoolbar\models\PageForm;
@@ -42,10 +43,13 @@ ToolbarAssets::register($this);
         <div class="yii-seo-og">
             <label>OG tags</label>
             <div class="yii-seo-og-list">
-                <div class="form-group">
-                    <input type="text" class="form-control og-name" placeholder="property like og:title">
-                    <input type="text" class="form-control og-content" placeholder="content">
-                </div>
+                <?php foreach($model->ogTags as $property => $content): ?>
+                    <?php $index = isset($index) ? $index + 1 : 0; ?>
+                    <?= $this->render('_ogTag', compact('form', 'model', 'property', 'content', 'index')); ?>
+                <?php endforeach; ?>
+                <?php if (!count($model->ogTags)): ?>
+                    <?= $this->render('_ogTag', compact('form', 'model')); ?>
+                <?php endif; ?>
             </div>
             <a href="#" class="addTag">Add OG tag</a>
         </div>
@@ -53,14 +57,15 @@ ToolbarAssets::register($this);
 
         <?= \yii\helpers\Html::submitButton('Save', ['class' => 'btn']); ?>
         <?php $form->end(); ?>
+        <?php if (count($seoAttributes)): ?>
         <div class="seo-toolbar_help">
-
             <div class="seo-toolbar_help__inner">
-                <p>{product.name} <b>ALPINESTARS COMPASS BACKPACK</b></p>
-                <p>{product.name} <b>ALPINESTARS COMPASS BACKPACK</b></p>
-                <p>{product.name} <b>ALPINESTARS COMPASS BACKPACK</b></p>
+                <?php foreach($seoAttributes as $name => $value): ?>
+                    <p><?=$name?> <b><?=$value ?></b></p>
+                <?php endforeach; ?>
             </div>
         </div>
+        <?php endif; ?>
         <?php $pjax->end(); ?>
     </div>
 </div>
