@@ -6,7 +6,7 @@ It doesn't require any administration panel, it works right in the place (as Yii
 ## Installation
 
 ```
-$ composer require understeam/yii2-seo-toolbar:dev-master --prefer-dist
+$ composer require understeam/yii2-seo-toolbar:0.1 --prefer-dist
 ```
 
 ## Usage
