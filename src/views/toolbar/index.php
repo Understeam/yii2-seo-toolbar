@@ -41,7 +41,7 @@ ToolbarAssets::register($this);
         <?= $form->field($model, 'description')->textInput(); ?>
 
         <div class="yii-seo-og">
-            <label>OG tags</label>
+            <?=\yii\helpers\Html::activeLabel($model, 'ogTags'); ?>
             <div class="yii-seo-og-list">
                 <?php foreach($model->ogTags as $property => $content): ?>
                     <?php $index = isset($index) ? $index + 1 : 0; ?>
