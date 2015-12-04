@@ -3,6 +3,11 @@
 This toolbar allows to easily configure title of page, meta tags or Open Graph tags on your website.
 It doesn't require any administration panel, it works right in the place (as Yii2 Debug Toolbar).
 
+## Requirements
+
+This extension requires Redis to be installed and configured as `redis` application component.
+The main model class relies on `yii\redis\ActiveRecord` 
+
 ## Installation
 
 ```
