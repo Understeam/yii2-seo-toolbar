@@ -6,7 +6,7 @@ It doesn't require any administration panel, it works right in the place (as Yii
 ## Installation
 
 ```
-$ composer require understeam/yii2-seo-toolbar:0.1 --prefer-dist
+$ composer require understeam/yii2-seo-toolbar:0.2 --prefer-dist
 ```
 
 ## Usage
@@ -26,7 +26,7 @@ At first, add toolbar to modules configuration and add it into application boots
 ...
 ```
 
-It is strongly recommended to use name `seoToobar` because of it is hardcoded (yet).
+It is strongly recommended to use name `seoToobar` because it is hardcoded (yet).
 
 ## Access control
 
