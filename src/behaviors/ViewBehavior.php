@@ -56,7 +56,9 @@ class ViewBehavior extends Behavior
             }
         }
         if (Yii::$app->getModule('seoToolbar')->checkAccess(Yii::$app)) {
-            Yii::$app->session->set('seoAttributes:' . $url, self::$_seoPage->getReplaceData());
+            if (self::$_seoPage) {
+                Yii::$app->session->set('seoAttributes:' . $url, self::$_seoPage->getReplaceData());
+            }
         }
     }
 

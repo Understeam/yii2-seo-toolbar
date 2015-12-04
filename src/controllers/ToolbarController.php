@@ -45,6 +45,7 @@ class ToolbarController extends Controller
             }
         }
         $seoAttributes = Yii::$app->session->get('seoAttributes:' . $url, []);
+        Yii::$app->session->remove('seoAttributes:' . $url);
         return $this->renderAjax($this->action->id, compact('model', 'seoAttributes'));
     }
 
