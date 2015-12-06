@@ -11,7 +11,7 @@ The main model class relies on `yii\redis\ActiveRecord`
 ## Installation
 
 ```
-$ composer require understeam/yii2-seo-toolbar:0.2 --prefer-dist
+$ composer require understeam/yii2-seo-toolbar:0.3 --prefer-dist
 ```
 
 ## Usage
